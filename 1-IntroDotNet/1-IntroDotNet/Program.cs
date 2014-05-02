@@ -60,7 +60,7 @@ namespace _1_IntroDotNet
 
             #endregion
 
-            // AcquireLeaseSample(connectionStringDevAccount);
+            AcquireLeaseSample(connectionStringDevAccount);
 
             Console.ReadLine();
         }
@@ -275,22 +275,22 @@ namespace _1_IntroDotNet
             CloudBlockBlob blob = container.GetBlockBlobReference(blobName);
             blob.UploadText("0", Encoding.UTF8);
 
-            Parallel.For(0, 20, i =>
+            Parallel.For(0, 20, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 }, i =>
             {
                 CloudStorageAccount sAccount = CloudStorageAccount.Parse(connectionString);
                 CloudBlobClient bClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer bContainer = client.GetContainerReference("myfiles");
-                ICloudBlob blobRef = container.GetBlobReferenceFromServer(blobName);
-                bool isOk = false;
+                CloudBlockBlob blobRef = container.GetBlockBlobReference(blobName);
 
+                bool isOk = false;
                 while (isOk == false)
                 {
                     try
                     {
                         // The Lease Blob operation establishes and manages a lock on a blob for write and delete operations. 
                         // The lock duration can be 15 to 60 seconds, or can be infinite.
-                        string leaseId = blobRef.AcquireLease(TimeSpan.FromSeconds(10), Guid.NewGuid().ToString());
-                        using (Stream stream = blobRef.OpenRead(AccessCondition.GenerateLeaseCondition(leaseId)))
+                        string leaseId = blobRef.AcquireLease(TimeSpan.FromSeconds(15), Guid.NewGuid().ToString());
+                        using (Stream stream = blobRef.OpenRead())
                         using (StreamReader reader = new StreamReader(stream))
                         {
                             int raitingCount = int.Parse(reader.ReadToEnd());
@@ -298,7 +298,7 @@ namespace _1_IntroDotNet
                             blobRef.UploadFromByteArray(bytesToUpload, 0, bytesToUpload.Length, AccessCondition.GenerateLeaseCondition(leaseId));
                         }
 
-                        blobRef.BreakLease(accessCondition: AccessCondition.GenerateLeaseCondition(leaseId));
+                        blobRef.BreakLease(breakPeriod: TimeSpan.Zero, accessCondition: AccessCondition.GenerateLeaseCondition(leaseId));
                         isOk = true;
                     }
                     catch (Exception ex)
