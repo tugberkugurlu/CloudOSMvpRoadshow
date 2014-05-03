@@ -60,7 +60,11 @@ namespace _1_IntroDotNet
 
             #endregion
 
-            AcquireLeaseSample(connectionStringDevAccount);
+            #region Lease
+
+            // AcquireLeaseSample(connectionStringDevAccount);
+
+            #endregion
 
             Console.ReadLine();
         }
