@@ -23,24 +23,24 @@ namespace _1_IntroDotNet
             #region Intro
 
             // Intro(connectionStringDevAccount);
-            // List(connectionString);
-            // FolderBasedUpload(connectionString);
-            // FolderBasedListing(connectionString);
+            // List(connectionStringDevAccount);
+            // FolderBasedUpload(connectionStringDevAccount);
+            // FolderBasedListing(connectionStringDevAccount);
             // SetMetadata(connectionStringDevAccount);
 
             #endregion
 
             #region Private Access
 
-            // UploadAsPrivateBlob(connectionString);
+            // UploadAsPrivateBlob(connectionStringDevAccount);
 
             #endregion
 
             #region Shared Access Signature
 
-            // GenerageSharedAccessSignature(connectionString);
-            
-            // string containerUriWithSas = GenerateReadWriteSas(connectionString);
+            // GenerageSharedAccessSignature(connectionStringDevAccount);
+
+            // string containerUriWithSas = GenerateReadWriteSas(connectionStringDevAccount);
             // UploadFileWithSas(containerUriWithSas);
 
             #endregion
